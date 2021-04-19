@@ -1,19 +1,20 @@
-package link_shortener
+package main
 
 import (
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
+	"fmt"
 	"log"
-	"net"
+	"net/http"
 )
 
 const (
-	port = ": 50050"
+	port = ":50050"
 )
 
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Работй чертов виндовс! %s", r.URL.Path[1:])
+}
+
 func main() {
-	lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("failed to listen: &v", err)
-	}
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
