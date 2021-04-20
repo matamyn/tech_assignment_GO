@@ -1,0 +1,8 @@
+database:
+  host: "127.0.0.1"
+  port: 3306
+server:
+  host: "127.0.0.1"
+  port: 55081
+log:
+  level: "debug"
