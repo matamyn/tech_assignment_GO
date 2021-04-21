@@ -7,11 +7,12 @@ import (
 
 type Config struct {
 	MySqlDB struct {
-		Host string `yaml:"host"`
-		Port string `yaml:"port"`
+		Host     string `yaml:"host"`
+		DbName   string `yaml:"db_name"`
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
 	} `yaml:"database"`
 	Server struct {
-		Host string `yaml:"host"`
 		Port string `yaml:"port"`
 	} `yaml:"server"`
 	Log struct {
@@ -33,4 +34,16 @@ func ReadConf(configPath string) (*Config, error) {
 	}
 
 	return config, nil
+}
+
+func NewConfig() *Config {
+	cfg := &Config{}
+	cfg.MySqlDB.Host = "127.0.0.1"
+	cfg.MySqlDB.DbName = "testdb"
+	cfg.MySqlDB.User = "root"
+	cfg.MySqlDB.Password = "root"
+
+	cfg.Server.Port = "55081"
+	cfg.Log.Level = "trace"
+	return cfg
 }

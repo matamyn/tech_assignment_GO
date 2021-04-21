@@ -1,8 +1,9 @@
 database:
-  host: "127.0.0.1"
-  port: 3306
+  host: 127.0.0.1
+  db_name: testdb
+  user: root
+  password: root
 server:
-  host: "127.0.0.1"
-  port: 55081
+  port: :55081
 log:
-  level: "debug"
+  level: debug
