@@ -1,6 +1,6 @@
 database:
   host: 127.0.0.1
-  db_name: testdb
+  db_name: db_link_shorter
   user: root
   password: root
 server:

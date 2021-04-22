@@ -4,16 +4,17 @@ import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/app/db_facade"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 )
 
 type LinkShorterService struct {
-	config *Config
-	logger *logrus.Logger
-	router *mux.Router
-	db     *sql.DB
+	config   *Config
+	logger   *logrus.Logger
+	router   *mux.Router
+	dbFacade *db_facade.DbFacade
 }
 
 func New(config *Config) *LinkShorterService {
@@ -35,8 +36,10 @@ func (a *LinkShorterService) Start() error {
 	}
 
 	a.logger.Info("Start Link Shorter Service")
+
 	return http.ListenAndServe(a.config.Server.Port, a.router)
 }
+
 func (a *LinkShorterService) configureLogger() error {
 	level, err := logrus.ParseLevel(a.config.Log.Level)
 	if err != nil {
@@ -45,14 +48,17 @@ func (a *LinkShorterService) configureLogger() error {
 	a.logger.SetLevel(level)
 	return nil
 }
+
 func (a *LinkShorterService) configureRouter() {
 	a.router.HandleFunc("/HELLO", a.handleHello())
 }
+
 func (a *LinkShorterService) handleHello() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		_, _ = io.WriteString(w, "hello")
 	}
 }
+
 func (s *LinkShorterService) ConnectDB() error {
 	full_url :=
 		s.config.MySqlDB.User + ":" +
@@ -65,6 +71,6 @@ func (s *LinkShorterService) ConnectDB() error {
 	if err := db.Ping(); err != nil {
 		return err
 	}
-	s.db = db
+	s.dbFacade.Db_ = db
 	return nil
 }

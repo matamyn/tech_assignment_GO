@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/app/link_shorter"
+	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/app"
 	"log"
 )
 
@@ -11,7 +11,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configPath, "config-path", "configs/link_shorter.yml", "path to config file")
+	flag.StringVar(&configPath, "config-path", "../configs/link_shorter.yml", "path to config file")
 }
 func main() {
 	flag.Parse()
