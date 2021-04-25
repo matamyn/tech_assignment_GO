@@ -2,7 +2,7 @@ package model
 
 var DefaultLink = "https.short_link.ru/"
 
-type ShortLink struct {
+type LinkDbRow struct {
 	ID_           uint
 	ShortLinkKey_ string
 	Link_         string

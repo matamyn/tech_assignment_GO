@@ -1,7 +1,11 @@
-syntax = "proto3"
-
+syntax = "proto3";
 package model;
 
+service RpcService{
+  rpc GetLink(GetLinkRequest) returns(GetLinkResponse){
+  }
+  rpc AddShortLink(AddShortLinkRequest) returns(AddShortLinkResponse){}
+}
 message GetLinkRequest{
   string short_link = 1;
   string short_link_key = 2;

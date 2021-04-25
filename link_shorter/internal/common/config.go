@@ -40,7 +40,7 @@ func ReadConf(configPath string) (*Config, error) {
 func NewConfig() *Config {
 	cfg := &Config{}
 	cfg.DataBase.Host = "127.0.0.1"
-	cfg.DataBase.DbName = "testdb"
+	cfg.DataBase.DbName = "db_short_linker"
 	cfg.DataBase.User = "root"
 	cfg.DataBase.Password = "root"
 
