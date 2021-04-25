@@ -1,0 +1,20 @@
+syntax = "proto3"
+
+package model;
+
+message GetLinkRequest{
+  string short_link = 1;
+  string short_link_key = 2;
+}
+
+message GetLinkResponse{
+  string link = 1;
+}
+
+message AddShortLinkRequest{
+  string link = 1;
+}
+message AddShortLinkResponse{
+  string short_link = 1;
+  string short_link_key = 2;
+}

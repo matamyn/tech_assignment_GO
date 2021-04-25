@@ -2,7 +2,8 @@ package main
 
 import (
 	"flag"
-	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/app"
+	"github.com/matamyn/tech_assignment_GO/link_shorter/internal"
+	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/common"
 	"log"
 )
 
@@ -16,13 +17,11 @@ func init() {
 func main() {
 	flag.Parse()
 
-	conf, err := link_shorter.ReadConf(configPath)
+	conf, err := common.ReadConf(configPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	app := link_shorter.New(conf)
-	if err := app.Start(); err != nil {
+	if err := link_shorter.Start(conf); err != nil {
 		log.Fatal(err)
 	}
-
 }

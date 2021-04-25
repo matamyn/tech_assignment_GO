@@ -1,40 +1,46 @@
 package link_shorter
 
 import (
-	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
-	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/app/db_facade"
+	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/common"
+	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/db_facade"
 	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 )
 
 type LinkShorterService struct {
-	config   *Config
+	config   *common.Config
 	logger   *logrus.Logger
 	router   *mux.Router
 	dbFacade *db_facade.DbFacade
 }
 
-func New(config *Config) *LinkShorterService {
-	return &LinkShorterService{
+func linkShorterService(config *common.Config) *LinkShorterService {
+	service := &LinkShorterService{
 		config: config,
 		logger: logrus.New(),
 		router: mux.NewRouter(),
 	}
+	return service
 }
 
-func (a *LinkShorterService) Start() error {
-	if err := a.configureLogger(); err != nil {
+func Start(config *common.Config) error {
+	a := linkShorterService(config)
+
+	err := a.configureLogger()
+	if err != nil {
 		return err
 	}
+
+	a.dbFacade, err = db_facade.InitDbFacade(config.DataBase)
+	if err != nil {
+		return err
+	}
+
+	defer a.dbFacade.Db_.Close()
 	a.configureRouter()
-
-	if err := a.ConnectDB(); err != nil {
-		return err
-	}
-
 	a.logger.Info("Start Link Shorter Service")
 
 	return http.ListenAndServe(a.config.Server.Port, a.router)
@@ -57,20 +63,4 @@ func (a *LinkShorterService) handleHello() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		_, _ = io.WriteString(w, "hello")
 	}
-}
-
-func (s *LinkShorterService) ConnectDB() error {
-	full_url :=
-		s.config.MySqlDB.User + ":" +
-			s.config.MySqlDB.Password + "@/" +
-			s.config.MySqlDB.DbName
-	db, err := sql.Open("mysql", full_url)
-	if err != nil {
-		return err
-	}
-	if err := db.Ping(); err != nil {
-		return err
-	}
-	s.dbFacade.Db_ = db
-	return nil
 }

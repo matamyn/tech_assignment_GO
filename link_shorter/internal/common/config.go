@@ -1,18 +1,19 @@
-package link_shorter
+package common
 
 import (
 	"gopkg.in/yaml.v2"
 	"os"
 )
 
+type MySqlDb struct {
+	Host     string `yaml:"host"`
+	DbName   string `yaml:"db_name"`
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+}
 type Config struct {
-	MySqlDB struct {
-		Host     string `yaml:"host"`
-		DbName   string `yaml:"db_name"`
-		User     string `yaml:"user"`
-		Password string `yaml:"password"`
-	} `yaml:"database"`
-	Server struct {
+	DataBase MySqlDb `yaml:"database"`
+	Server   struct {
 		Port string `yaml:"port"`
 	} `yaml:"server"`
 	Log struct {
@@ -38,10 +39,10 @@ func ReadConf(configPath string) (*Config, error) {
 
 func NewConfig() *Config {
 	cfg := &Config{}
-	cfg.MySqlDB.Host = "127.0.0.1"
-	cfg.MySqlDB.DbName = "testdb"
-	cfg.MySqlDB.User = "root"
-	cfg.MySqlDB.Password = "root"
+	cfg.DataBase.Host = "127.0.0.1"
+	cfg.DataBase.DbName = "testdb"
+	cfg.DataBase.User = "root"
+	cfg.DataBase.Password = "root"
 
 	cfg.Server.Port = "55081"
 	cfg.Log.Level = "trace"

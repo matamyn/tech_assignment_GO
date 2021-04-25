@@ -1,6 +1,6 @@
 database:
-  host: 127.0.0.1
-  db_name: db_link_shorter
+  host: localhost
+  db_name: db_short_linker
   user: root
   password: root
 server:
