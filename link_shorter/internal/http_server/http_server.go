@@ -28,7 +28,6 @@ func InitHttpServer(config *common.Config) error {
 	}
 	defer facade.Db_.Close()
 	s := newHttpServer(facade)
-
 	s.configureRouter()
 	return http.ListenAndServe(config.Server.Port, s.router)
 }

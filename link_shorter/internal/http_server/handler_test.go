@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/common"
 	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/db_facade"
-	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/model"
+	pb "github.com/matamyn/tech_assignment_GO/link_shorter/internal/model"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -23,23 +23,27 @@ func TestHttpServer(t *testing.T) {
 	defer facade.Db_.Close()
 	s := newHttpServer(facade)
 
-	full_link := "{\"Link\": \"Test_Fake_link_" + time.Now().String() + "\""
+	full_link := "Test_Fake_link_" + time.Now().String()
 
-	b := &bytes.Buffer{}
-	json.NewEncoder(b).Encode(struct {
+	set_b := &bytes.Buffer{}
+
+	_ = json.NewEncoder(set_b).Encode(struct {
 		Url string
 	}{Url: full_link})
-	set_rec := httptest.NewRecorder()
-	set_req, _ := http.NewRequest(http.MethodPost, "/SetLink", b)
-	s.router.ServeHTTP(set_rec, set_req)
+
+	set_res := httptest.NewRecorder()
+	set_req, _ := http.NewRequest(http.MethodPost, "/SetLink", set_b)
+	s.router.ServeHTTP(set_res, set_req)
+
+	get_b := &bytes.Buffer{}
+	_ = json.NewEncoder(get_b).Encode(struct {
+		ShortUrl string
+	}{ShortUrl: pb.DefaultLink + set_res.Body.String()})
 
 	get_rec := httptest.NewRecorder()
-	json.NewEncoder(b).Encode(struct {
-		ShortUrl string
-	}{ShortUrl: model.DefaultLink + set_rec.Body.String()})
-	get_req, _ := http.NewRequest(http.MethodPost, "/GetLink", b)
+
+	get_req, _ := http.NewRequest(http.MethodPost, "/GetLink", get_b)
 	s.router.ServeHTTP(get_rec, get_req)
 
 	assert.Equal(t, get_rec.Body.String(), full_link)
-
 }

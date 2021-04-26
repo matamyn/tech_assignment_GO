@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/google/uuid"
+	pb "github.com/matamyn/tech_assignment_GO/link_shorter/internal/model"
 	"net/http"
 )
 
@@ -50,44 +51,38 @@ func (s *HttpServer) setRequestID(next http.Handler) http.Handler {
 //		)
 //	})
 //}
-type FullLink struct {
-	Link string `json:"Url"`
-}
-type ShortLink struct {
-	ShortLink string `json:"ShortUrl"`
-}
 
 func (s *HttpServer) handlerGetLink() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		req := &ShortLink{}
+		req := &pb.GetLinkRequest{}
 		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		linkDbRow, err := s.dbFacade.GetLink(req.ShortLink)
+		linkDbRow, err := s.dbFacade.GetLink(req.ShortUrl)
 		if err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		l := FullLink{Link: linkDbRow.Link_}
+		l := pb.GetLinkResponse{Url: linkDbRow.Link_}
 		s.respond(w, r, http.StatusOK, l)
 	}
 }
 func (s *HttpServer) handlerCreateShortLink() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		req := &FullLink{}
+		req := &pb.AddShortLinkRequest{}
 		if err := json.NewDecoder(r.Body).Decode(req); err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		linkDbRow, err := s.dbFacade.CreateShortLink(req.Link)
+		linkDbRow, err := s.dbFacade.CreateShortLink(req.Url)
 		if err != nil {
 			s.error(w, r, http.StatusBadRequest, err)
 			return
 		}
-		l := ShortLink{ShortLink: linkDbRow.ShortLinkKey_}
+		l := pb.AddShortLinkResponse{ShortUrl: linkDbRow.ShortLinkKey_}
 		s.respond(w, r, http.StatusCreated, l)
 	}
 }

@@ -7,18 +7,15 @@ service RpcService{
   rpc AddShortLink(AddShortLinkRequest) returns(AddShortLinkResponse){}
 }
 message GetLinkRequest{
-  string short_link = 1;
-  string short_link_key = 2;
+  string ShortUrl = 1;
 }
-
 message GetLinkResponse{
-  string link = 1;
+  string Url = 1;
 }
 
 message AddShortLinkRequest{
-  string link = 1;
+  string Url = 1;
 }
 message AddShortLinkResponse{
-  string short_link = 1;
-  string short_link_key = 2;
+  string ShortUrl = 1;
 }

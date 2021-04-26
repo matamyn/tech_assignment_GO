@@ -18,7 +18,7 @@ func Start(config *common.Config) error {
 	if err != nil {
 		return err
 	}
-	err = http_server.InitHttpServer(config)
+	go http_server.InitHttpServer(config)
 
 	a.logger.Info("Start Link Shorter Service")
 
