@@ -5,6 +5,7 @@ import (
 	"github.com/matamyn/tech_assignment_GO/link_shorter/internal"
 	"github.com/matamyn/tech_assignment_GO/link_shorter/internal/common"
 	"log"
+	"runtime"
 )
 
 var (
@@ -21,6 +22,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	runtime.GOMAXPROCS(2)
 	if err := link_shorter.Start(conf); err != nil {
 		log.Fatal(err)
 	}
